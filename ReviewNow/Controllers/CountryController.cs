@@ -21,11 +21,17 @@ namespace ReviewNow.Controllers
             this.countryRepository = countryRepository;
         }
 
-        [HttpGet]
+        [HttpGet("get")]
         public IActionResult Get()
         {
             
             return Ok(countryRepository.GetAllCountriesWithCities());
+        }
+        [HttpGet("getcountries")]
+        public IActionResult Get1()
+        {
+
+            return Ok(countryRepository.GetAllCountries());
         }
     }
 }

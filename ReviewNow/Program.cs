@@ -1,4 +1,5 @@
 using Domain;
+using Application;
 using Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;

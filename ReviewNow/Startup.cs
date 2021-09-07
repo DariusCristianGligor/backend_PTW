@@ -23,6 +23,11 @@ namespace ReviewNow
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+          
+
+            // Register the Swagger generator, defining 1 or more Swagger documents
+            services.AddSwaggerGen();
+
             services.AddDbContext<ReviewNowContext>(options=> {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
                
@@ -32,6 +37,9 @@ namespace ReviewNow
             services.AddScoped<ICountryRepository, CountryRepository>();
             services.AddScoped<IPlaceRepository, PlaceRepository>();
             services.AddScoped<IReviewRepository, ReviewRepository>();
+            services.AddControllers().AddNewtonsoftJson(options =>
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
             //aici pt fiecare category
             services.AddControllersWithViews();
 
@@ -45,6 +53,12 @@ namespace ReviewNow
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
+           
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -67,8 +81,11 @@ namespace ReviewNow
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute(
+                    name: "category",
+                    pattern: "{controller}/{action=Index}/{id?}");
             });
-
+            
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "ClientApp";

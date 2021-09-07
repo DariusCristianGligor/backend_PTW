@@ -1,4 +1,5 @@
 ﻿using Application;
+using Domain;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -15,17 +16,30 @@ namespace ReviewNow.Controllers
     public class CategoryController : ControllerBase
     {
         private readonly ILogger<CategoryController> logger;
-        private readonly ICategoryRepository categoryRepository;
+        private readonly ICategoryRepository _categoryRepository;
 
-        public CategoryController(ILogger<CategoryController> logger,ICategoryRepository categoryRepository)
+        public CategoryController(ILogger<CategoryController> logger, ICategoryRepository categoryRepository)
         {
             this.logger = logger;
-            this.categoryRepository = categoryRepository;
+            this._categoryRepository = categoryRepository;
         }
-        [HttpGet]
+        [HttpGet("get")]
         public IActionResult Get()
         {
-            return Ok(categoryRepository.GetAll());
+            return Ok(_categoryRepository.GetAll());
+        }
+
+        [HttpPost("post")]
+        public IActionResult Create(Category category)
+        {
+            _categoryRepository.Create(category);
+            return Ok("I did it!!!!!");
+        }
+        [HttpDelete("delete")]
+        public IActionResult Delete(Guid category)
+        {
+            _categoryRepository.Delete(category);
+            return Ok("I removed it!!");
         }
     }
 }
