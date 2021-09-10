@@ -16,7 +16,7 @@ namespace ReviewNow.Controllers
         private readonly ILogger<PlaceController> logger;
         private readonly IPlaceRepository _placeRepository;
 
-        public PlaceController(ILogger<PlaceController> logger,IPlaceRepository placeRepository)
+        public PlaceController(ILogger<PlaceController> logger, IPlaceRepository placeRepository)
         {
             this.logger = logger;
             this._placeRepository = placeRepository;
@@ -26,6 +26,28 @@ namespace ReviewNow.Controllers
         {
             return Ok(_placeRepository.GetAllOrderedByRating());
         }
+        [HttpGet("getallplacesbycity")]
+        public IActionResult GetAllPlacesByCityId(Guid id)
+        {
+
+            return Ok(_placeRepository.GetAllByCityId(id));
+        }
+        [HttpGet("getallplacesbycityandcategory")]
+        public IActionResult GetAllPlacesByCityIdAndCategoryId(Guid city, ICollection<Guid> categories)
+        {
+            return Ok(_placeRepository.GetAllByCityIdAndCategoryId(city, categories));
+        }
+        [HttpGet("getallplacesbycategory")]
+        public IActionResult GetAllPlacesByCategory(ICollection<Guid> categories)
+        {
+            return Ok(_placeRepository.GetAllByCategoryId(categories));
+        }
+        [HttpGet("getallplacesbycategoryandcountry")]
+        public IActionResult GetAllPlacesByCategoryIdAndCountryId(ICollection<Guid> categories, Guid CountryId)
+        {
+            return Ok(_placeRepository.GetAllByCategoryIdAndCountryId(categories, CountryId));
+        }
+
         [HttpPost("post")]
         public IActionResult Post(Place place)
         {

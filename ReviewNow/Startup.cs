@@ -23,14 +23,14 @@ namespace ReviewNow
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-          
+
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen();
 
-            services.AddDbContext<ReviewNowContext>(options=> {
+            services.AddDbContext<ReviewNowContext>(options => {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-               
+
             });
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ICityRepository, CityRepository>();
@@ -58,7 +58,7 @@ namespace ReviewNow
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
-           
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -85,7 +85,7 @@ namespace ReviewNow
                     name: "category",
                     pattern: "{controller}/{action=Index}/{id?}");
             });
-            
+
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "ClientApp";

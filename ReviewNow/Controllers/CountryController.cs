@@ -24,7 +24,7 @@ namespace ReviewNow.Controllers
         [HttpGet("get")]
         public IActionResult Get()
         {
-            
+
             return Ok(countryRepository.GetAllCountriesWithCities());
         }
         [HttpGet("getcountries")]

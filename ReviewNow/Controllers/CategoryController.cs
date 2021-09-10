@@ -24,7 +24,7 @@ namespace ReviewNow.Controllers
             this._categoryRepository = categoryRepository;
         }
         [HttpGet("get")]
-        public IActionResult Get()
+        public IActionResult Index()
         {
             return Ok(_categoryRepository.GetAll());
         }
