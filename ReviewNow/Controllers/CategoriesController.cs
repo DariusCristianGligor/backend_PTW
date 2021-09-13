@@ -1,41 +1,39 @@
 ﻿using Application;
 using Domain;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ReviewNow.Controllers
 {
     [ApiController]
-    [Microsoft.AspNetCore.Mvc.Route("[controller]")]
+    [Route("[controller]")]
 
-    public class CategoryController : ControllerBase
+    public class CategoriesController : ControllerBase
     {
-        private readonly ILogger<CategoryController> logger;
+        private readonly ILogger<CategoriesController> logger;
         private readonly ICategoryRepository _categoryRepository;
 
-        public CategoryController(ILogger<CategoryController> logger, ICategoryRepository categoryRepository)
+        public CategoriesController(ILogger<CategoriesController> logger, ICategoryRepository categoryRepository)
         {
             this.logger = logger;
             this._categoryRepository = categoryRepository;
         }
-        [HttpGet("get")]
+
+        [HttpGet]
         public IActionResult Index()
         {
             return Ok(_categoryRepository.GetAll());
         }
 
-        [HttpPost("post")]
+        [HttpPost]
         public IActionResult Create(Category category)
         {
             _categoryRepository.Create(category);
             return Ok("I did it!!!!!");
         }
-        [HttpDelete("delete")]
+
+        [HttpDelete]
         public IActionResult Delete(Guid category)
         {
             _categoryRepository.Delete(category);

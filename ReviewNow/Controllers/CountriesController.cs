@@ -10,28 +10,29 @@ namespace ReviewNow.Controllers
 {
     [ApiController]
     [Microsoft.AspNetCore.Mvc.Route("[controller]")]
-    public class CountryController : ControllerBase
+    public class CountriesController : ControllerBase
     {
-        private readonly ILogger<CountryController> logger;
+        private readonly ILogger<CountriesController> logger;
         private readonly ICountryRepository countryRepository;
 
-        public CountryController(ILogger<CountryController> logger, ICountryRepository countryRepository)
+        public CountriesController(ILogger<CountriesController> logger, ICountryRepository countryRepository)
         {
             this.logger = logger;
             this.countryRepository = countryRepository;
         }
 
-        [HttpGet("get")]
-        public IActionResult Get()
-        {
-
-            return Ok(countryRepository.GetAllCountriesWithCities());
-        }
-        [HttpGet("getcountries")]
+        [HttpGet]
         public IActionResult Get1()
         {
 
             return Ok(countryRepository.GetAllCountries());
+        }
+
+        [HttpGet("cities")]
+        public IActionResult Get()
+        {
+
+            return Ok(countryRepository.GetAllCountriesWithCities());
         }
     }
 }

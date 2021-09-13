@@ -11,31 +11,32 @@ namespace ReviewNow.Controllers
 {
     [ApiController]
     [Microsoft.AspNetCore.Mvc.Route("[controller]")]
-    public class ReviewController: ControllerBase
+    public class ReviewsController: ControllerBase
     {
-        private readonly ILogger<ReviewController> logger;
+        private readonly ILogger<ReviewsController> logger;
         private readonly IReviewRepository _reviewRepository;
 
-        public ReviewController(ILogger<ReviewController> logger,IReviewRepository reviewRepository)
+        public ReviewsController(ILogger<ReviewsController> logger,IReviewRepository reviewRepository)
         {
             this.logger = logger;
             _reviewRepository = reviewRepository;
         }
 
-        [HttpGet("get")]
+        [HttpGet]
         public IActionResult Get(Guid placeId)
         {
 
             return Ok(_reviewRepository.GetAllReviewByPlaceId(placeId));
         }
-        [HttpPost("post")]
+
+        [HttpPost]
         public IActionResult Post(Review review)
         {
             _reviewRepository.Add(review);
             return Ok("I did it!!!!!");
         }
 
-        [HttpDelete("delete")]
+        [HttpDelete]
         public IActionResult Delete(Guid reviewId)
         {
             _reviewRepository.Delete(reviewId);
