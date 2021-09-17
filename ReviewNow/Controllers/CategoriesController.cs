@@ -34,9 +34,9 @@ namespace ReviewNow.Controllers
         }
 
         [HttpDelete]
-        public IActionResult Delete(Guid category)
+        public IActionResult Delete(Guid categoryId)
         {
-            _categoryRepository.Delete(category);
+            _categoryRepository.Delete(categoryId);
             return Ok("I removed it!!");
         }
     }
