@@ -1,8 +1,11 @@
 ﻿using Application;
+using AutoMapper;
 using Domain;
+using Domain.NormalDomain;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using ReviewNow.ExportDtoClases;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,12 +21,13 @@ namespace ReviewNow.Controllers
         private readonly ILogger<ReviewsController> logger;
         private readonly IReviewRepository _reviewRepository;
         private readonly IHostingEnvironment _hostingEnv;
-
-        public ReviewsController(ILogger<ReviewsController> logger,IReviewRepository reviewRepository, IHostingEnvironment hostingEnv)
+        private readonly IMapper _mapper;
+        public ReviewsController(ILogger<ReviewsController> logger,IReviewRepository reviewRepository, IHostingEnvironment hostingEnv,IMapper mapper)
         {
             this.logger = logger;
             _reviewRepository = reviewRepository;
             _hostingEnv = hostingEnv;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -33,44 +37,37 @@ namespace ReviewNow.Controllers
             return Ok(_reviewRepository.GetAllReviewByPlaceId(placeId));
         }
 
+
         [HttpPost]
-        public async Task<ActionResult> Post([FromForm] ReviewViewModel reviewVM)
+        public async Task<ActionResult> Post([FromForm] ReviewDto reviewDto)
         {
-            if (reviewVM.Image != null)
+            Review review;
+            if (reviewDto.Image != null)
             {
                 var a = _hostingEnv.WebRootPath;
-                var fileName = Path.GetFileName(reviewVM.Image.FileName);
+                var fileName = Path.GetFileName(reviewDto.Image.FileName);
                 var filePath = Path.Combine(_hostingEnv.WebRootPath, "images\\Reviews", fileName);
 
                 using (var fileSteam = new FileStream(filePath, FileMode.Create))
                 {
-                    await reviewVM.Image.CopyToAsync(fileSteam);
+                    await reviewDto.Image.CopyToAsync(fileSteam);
                 }
-
-                Review review = new Review();
-                review.Id = new Guid();
-                //maybe a erorr
-                review.ImagePath = filePath;
-                review.Place = reviewVM.Place;
-                review.PlaceId = reviewVM.PlaceId;
-                review.Stars = reviewVM.Stars;
-                review.CostOfPlace = reviewVM.CostOfPlace;
-                review.User = reviewVM.User;
-                review.UserId = reviewVM.UserId;
-                _reviewRepository.Add(review);
+                Review review1 = _mapper.Map<Review>(reviewDto);
+                review = await _reviewRepository.AddAsync(review1);
+                ReviewExpDto reviewExpDto = _mapper.Map<ReviewExpDto>(review);
+                return Created("~", reviewExpDto);
             }
-            else
-            {
-                return BadRequest();
-            }
-            return Ok("I did it!!!!!");
+           
+            return BadRequest();
+   
         }
 
-        [HttpDelete]
+        [HttpDelete("{reviewIds}")]
         public IActionResult Delete(Guid reviewId)
         {
+            if (_reviewRepository.Find(reviewId) == false) return NotFound();
             _reviewRepository.Delete(reviewId);
-            return Ok("I did it!!!");
+            return NoContent();
         }
 
     }

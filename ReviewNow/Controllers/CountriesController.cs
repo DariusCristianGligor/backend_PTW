@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace ReviewNow.Controllers
 {
     [ApiController]
-    [Microsoft.AspNetCore.Mvc.Route("[controller]")]
+    [Route("[controller]")]
     public class CountriesController : ControllerBase
     {
         private readonly ILogger<CountriesController> logger;
@@ -24,15 +24,9 @@ namespace ReviewNow.Controllers
         [HttpGet]
         public IActionResult Get1()
         {
-
             return Ok(countryRepository.GetAllCountries());
         }
 
-        [HttpGet("cities")]
-        public IActionResult Get()
-        {
-
-            return Ok(countryRepository.GetAllCountriesWithCities());
-        }
+ 
     }
 }

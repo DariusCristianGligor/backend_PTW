@@ -1,8 +1,12 @@
 ﻿using Application;
+using AutoMapper;
 using Domain;
+using Domain.NormalDomain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using ReviewNow.ExportDtoClases;
 using System;
+using System.Threading.Tasks;
 
 namespace ReviewNow.Controllers
 {
@@ -13,11 +17,13 @@ namespace ReviewNow.Controllers
     {
         private readonly ILogger<CategoriesController> logger;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IMapper _mapper;
 
-        public CategoriesController(ILogger<CategoriesController> logger, ICategoryRepository categoryRepository)
+        public CategoriesController(ILogger<CategoriesController> logger, ICategoryRepository categoryRepository,IMapper mapper)
         {
             this.logger = logger;
-            this._categoryRepository = categoryRepository;
+            _categoryRepository = categoryRepository;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -27,17 +33,22 @@ namespace ReviewNow.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Category category)
+        public async Task<IActionResult> CreateAsync([FromBody]CategoryDto categoryDto)
         {
-            _categoryRepository.Create(category);
-            return Ok("I did it!!!!!");
+          
+            Category categoryToAdd = _mapper.Map<Category>(categoryDto);
+            Category category=await _categoryRepository.CreateAsync(categoryToAdd);
+            CategoryExpDto categoryExpDto = _mapper.Map<CategoryExpDto>(category);
+            return Created($"~",categoryExpDto);
         }
 
-        [HttpDelete]
+        [HttpDelete("{categoryId}")]
         public IActionResult Delete(Guid categoryId)
         {
-            _categoryRepository.Delete(categoryId);
-            return Ok("I removed it!!");
+            if (_categoryRepository.Find(categoryId) == false)
+                return NotFound();
+             _categoryRepository.Delete(categoryId);
+            return NoContent();
         }
     }
 }

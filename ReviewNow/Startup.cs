@@ -1,4 +1,5 @@
 using Application;
+using AutoMapper;
 using Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -23,13 +24,22 @@ namespace ReviewNow
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
 
+            IMapper mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
+
+            services.AddMvc();
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen();
 
             services.AddDbContext<ReviewNowContext>(options => {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+
 
             });
             services.AddScoped<ICategoryRepository, CategoryRepository>();
@@ -48,6 +58,7 @@ namespace ReviewNow
             {
                 configuration.RootPath = "ClientApp/build";
             });
+            services.AddCors(options=>options.AddDefaultPolicy(builder=>builder.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -69,7 +80,7 @@ namespace ReviewNow
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
+            app.UseCors();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
@@ -78,12 +89,7 @@ namespace ReviewNow
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller}/{action=Index}/{id?}");
-                endpoints.MapControllerRoute(
-                    name: "category",
-                    pattern: "{controller}/{action=Index}/{id?}");
+                endpoints.MapControllers();
             });
 
             app.UseSpa(spa =>

@@ -1,7 +1,10 @@
 ﻿using Application;
+using AutoMapper;
 using Domain;
+using Domain.NormalDomain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using ReviewNow.ExportDtoClases;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,16 +13,18 @@ using System.Threading.Tasks;
 namespace ReviewNow.Controllers
 {
     [ApiController]
-    [Microsoft.AspNetCore.Mvc.Route("[controller]")]
+    [Route("[controller]")]
     public class PlacesController : ControllerBase
     {
-        private readonly ILogger<PlacesController> logger;
+        private readonly ILogger<PlacesController> _logger;
         private readonly IPlaceRepository _placeRepository;
+        private readonly IMapper _mapper;
 
-        public PlacesController(ILogger<PlacesController> logger, IPlaceRepository placeRepository)
+        public PlacesController(ILogger<PlacesController> logger, IPlaceRepository placeRepository, IMapper mapper)
         {
-            this.logger = logger;
-            this._placeRepository = placeRepository;
+            _logger = logger;
+            _placeRepository = placeRepository;
+            _mapper = mapper;
         }
         
         [HttpGet("all")]
@@ -53,17 +58,22 @@ namespace ReviewNow.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post(Place place)
+        public async Task<IActionResult> Post(PlaceDto placeDto)
         {
-            _placeRepository.Add(place);
-            return Ok("I added a new place");
+            Place placeToAdd = _mapper.Map<Place>(placeDto);
+            Place place=await _placeRepository.AddAsync(placeToAdd);
+            PlaceExpDto placeExpDto = _mapper.Map<PlaceExpDto>(place);
+            return Created("~", placeExpDto);
+  
         }
 
-        [HttpDelete]
+        [HttpDelete("{placeId}")]
         public IActionResult Delete(Guid placeId)
         {
-            _placeRepository.delete(placeId);
-            return Ok("I added a new place");
+            if (_placeRepository.Find(placeId) == false)
+                return NotFound();
+            _placeRepository.Delete(placeId);
+            return NoContent();
         }
 
 

@@ -4,13 +4,16 @@
     "anonymousAuthentication": true,
     "iisExpress": {
       "applicationUrl": "http://localhost:23522",
-      "sslPort": 44334
+      "sslPort": 44334,
+      "Access-Control-Allow-Origin": "*",
     }
   },
   "profiles": {
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
+      "anonymousAuthentication": true,
+      "Access-Control-Allow-Origin": "*",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -18,6 +21,8 @@
     "ReviewNow": {
       "commandName": "Project",
       "launchBrowser": true,
+      "Access-Control-Allow-Origin": "*",
+      "anonymousAuthentication": true,
       "applicationUrl": "https://localhost:5001;http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

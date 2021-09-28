@@ -1,4 +1,5 @@
 ﻿using Application;
+using Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -21,13 +22,11 @@ namespace ReviewNow.Controllers
             this.cityRepository = cityRepository;
         }
         
-        [HttpGet]
+        [HttpGet("{countryId}")]
         public IActionResult Get(Guid countryId)
         {
-            Guid a = new Guid("1940F4E0-31A0-47B6-82CE-BB1C32A3ECB8");
-            countryId = a;
+            logger.LogInformation($"{countryId} aaaaaaaa");
             return Ok(cityRepository.GetCitiesByCountryId(countryId));
         }
-        
     }
 }
