@@ -1,0 +1,12 @@
+
+Union structure/ clean structure
+domain:
+modelam problema
+clasele cu care lucram;
+Application:
+punem si Madieator;
+modelam usecase-urile;
+intefete;
+Prezentaion:
+Infrastructure:
+Comunicam cu exteriorul, de obicei cu baza de date;
