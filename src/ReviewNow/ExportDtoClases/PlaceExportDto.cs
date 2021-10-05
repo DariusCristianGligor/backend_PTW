@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ReviewNow.ExportDtoClases
 {
-    public class PlaceExpDto
+    public class PlaceExportDto
     {
         public Guid Id { set; get; }
 

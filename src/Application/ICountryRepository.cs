@@ -1,16 +1,13 @@
-﻿
-using Domain;
-using Domain.NormalDomain;
-using System;
-using System.Collections.Generic;
+﻿using Domain.NormalDomain;
+using System.Linq;
 
 namespace Application
 {
 
     public interface ICountryRepository
     {
-        ICollection<Country> GetAll();
-        ICollection<Country> GetAllCountriesWithCities();
-        ICollection<Country> GetAllCountries();
+        IQueryable<Country> GetAll();
+        IQueryable<Country> GetAllCountriesWithCities();
+        IQueryable<Country> GetAllCountries();
     }
 }

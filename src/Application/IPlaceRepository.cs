@@ -1,28 +1,27 @@
-﻿using Domain;
-using Domain.NormalDomain;
+﻿using Domain.NormalDomain;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Application
 {
     public interface IPlaceRepository
-    { 
-        ICollection<Place> GetAllByCategoryIdAndCountryId(ICollection<Guid> categoriesId, Guid CountryId);
+    {
+        IQueryable<Place> GetAllByCategoryIdAndCountryId(ICollection<Guid> categoriesId, Guid CountryId);
 
-        ICollection<Place> GetAllByCityIdAndCategoryId(Guid cityId, ICollection<Guid> categoriesId);
+        IQueryable<Place> GetAllByCityIdAndCategoryId(Guid cityId, ICollection<Guid> categoriesId);
 
-        ICollection<Place> GetAllByCategoryId(ICollection<Guid> categoriesId);
+        IQueryable<Place> GetAllByCategoryId(ICollection<Guid> categoriesId);
 
-        ICollection<Place> GetAllByCityId(Guid city);
+        IQueryable<Place> GetAllByCityId(Guid city);
 
-        ICollection<Place> GetAllOrderedByRating();
+        IQueryable<Place> GetAllOrderedByRating();
 
         void Delete(Guid placeId);
 
-        Task<Place> AddAsync(Place place);
+        Task<EntityEntry<Place>> AddAsync(Place place);
 
         bool Find(Guid placeId);
     }

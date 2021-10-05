@@ -20,6 +20,6 @@ namespace ReviewNow
                 {
                     webBuilder.UseStartup<Startup>();
                 });
-        
+
     }
 }

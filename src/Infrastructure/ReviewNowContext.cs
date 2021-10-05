@@ -1,5 +1,4 @@
 ﻿using CountryData.Standard;
-using Domain;
 using Domain.NormalDomain;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -9,12 +8,12 @@ namespace Infrastructure
 {
     public class ReviewNowContext : DbContext
     {
-        
-        public ReviewNowContext(DbContextOptions<ReviewNowContext>options ) : base(options)
+
+        public ReviewNowContext(DbContextOptions<ReviewNowContext> options) : base(options)
         {
-          
+
         }
-        
+
 
         public DbSet<Category> Categories { get; set; }
         public DbSet<City> Cities { get; set; }
@@ -26,7 +25,6 @@ namespace Infrastructure
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new CountryConfig());
-            // modelBuilder.ApplyConfigurationsFromAssembly(typeof(CountryConfig).Assembly);
             modelBuilder.ApplyConfiguration(new CityConfig());
             modelBuilder.ApplyConfiguration(new PlaceConfig());
             modelBuilder.ApplyConfiguration(new ReviewConfig());
@@ -47,7 +45,7 @@ namespace Infrastructure
                 ShortName = countriesDatashortName[i],
                 AddedDateTime = DateTime.Now
             }
-            ); 
+            );
                 var regions = helper.GetRegionByCountryCode(countriesDatashortName[i]);
                 foreach (var region in regions)
                 {

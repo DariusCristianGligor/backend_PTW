@@ -1,15 +1,10 @@
-﻿using Domain;
-using Domain.NormalDomain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Domain.NormalDomain;
 
 namespace Application
 {
     public interface IRecomandationService
     {
-        void RecalculateRating(Review review);
+        void RecalculateRating(Place place, int stars);
+        void RecalculateRatingDeleted(Place place, int stars);
     }
 }

@@ -1,12 +1,8 @@
 ﻿using AutoMapper;
 using Domain;
 using Domain.NormalDomain;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using ReviewNow.ExportDtoClases;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace ReviewNow
 {
     public class MappingProfile : Profile
@@ -21,11 +17,11 @@ namespace ReviewNow
             CreateMap<CountryDto, Country>();
             CreateMap<PlaceDto, Place>();
             CreateMap<ReviewDto, Review>();
-            CreateMap<Admin, AdminExpDto>();
-            CreateMap<Category, CategoryExpDto>();
-            CreateMap<Place, PlaceExpDto>();
-            CreateMap<Review, ReviewExpDto>();
-            CreateMap<User, UserExpDto>();
+            CreateMap<EntityEntry<Admin>, AdminExportDto>();
+            CreateMap<EntityEntry<Category>, CategoryExportDto>();
+            CreateMap<EntityEntry<Place>, PlaceExportDto>();
+            CreateMap<EntityEntry<Review>, ReviewExportDto>();
+            CreateMap<EntityEntry<User>, UserExportDto>();
         }
     }
 }

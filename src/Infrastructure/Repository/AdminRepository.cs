@@ -1,11 +1,8 @@
 ﻿using Application;
-using AutoMapper;
-using Domain;
 using Domain.NormalDomain;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Repository
@@ -13,39 +10,38 @@ namespace Infrastructure.Repository
     class AdminRepository : IAdminRepository
     {
         private readonly ReviewNowContext _dbContext;
-   
+
 
         public AdminRepository(ReviewNowContext dbContext)
         {
             _dbContext = dbContext;
-             
+
         }
-     
-        public  void Delete(Guid adminId)
+
+        public void Delete(Guid adminId)
         {
             _dbContext.Admins.RemoveRange(_dbContext.Admins.Where(x => x.Id == adminId));
-             _dbContext.SaveChanges();
+            _dbContext.SaveChanges();
         }
         public bool Find(Guid adminId)
         {
-            List<Admin> list = _dbContext.Admins.Where(x => x.Id == adminId).ToList();
-            return (!(list.Count==0));
+            return (!(_dbContext.Admins.Find(adminId) == null));
         }
 
-        public ICollection<Admin> GetAll()
+        public IQueryable<Admin> GetAll()
         {
-            return _dbContext.Admins.ToList();
+            return _dbContext.Admins;
         }
-        public ICollection<Admin> GetAll(int page,int pageSize)
+        public IQueryable<Admin> GetAll(int page, int pageSize)
         {
-            return _dbContext.Admins.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            return _dbContext.Admins.Skip((page - 1) * pageSize).Take(pageSize);
         }
-        
-        public async Task<Admin> AddAsync(Admin admin)
+
+        public async Task<EntityEntry<Admin>> AddAsync(Admin admin)
         {
-            await _dbContext.AddAsync(admin);
+            EntityEntry<Admin> admin2 = await _dbContext.AddAsync(admin);
             await _dbContext.SaveChangesAsync();
-            return admin;
+            return admin2;
         }
     }
 }

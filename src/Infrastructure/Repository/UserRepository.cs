@@ -1,32 +1,30 @@
 ﻿using Application;
-using AutoMapper;
-using Domain;
 using Domain.NormalDomain;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Repository
 {
     class UserRepository : IUsersRepository
     {
-       
+
         private readonly ReviewNowContext _dbContext;
-  
+
         public UserRepository(ReviewNowContext dbContext)
         {
             _dbContext = dbContext;
-          
+
         }
 
-        public async Task<User> AddAsync(User user)
+        public async Task<EntityEntry<User>> AddAsync(User user)
         {
-           
-            await _dbContext.AddAsync(user);
+
+            EntityEntry<User> userFromDb = await _dbContext.AddAsync(user);
             await _dbContext.SaveChangesAsync();
-            return user;
+            return userFromDb;
         }
         public void Delete(Guid userId)
         {
@@ -40,13 +38,13 @@ namespace Infrastructure.Repository
             return (!(list.Count == 0));
         }
 
-        public ICollection<User> GetAll()
+        public IQueryable<User> GetAll()
         {
-            return _dbContext.Users.ToList();
+            return _dbContext.Users;
         }
-        public ICollection<User> GetAll(int number,int pageNumber)
+        public IQueryable<User> GetAll(int number, int pageNumber)
         {
-            return _dbContext.Users.Skip((number - 1) * pageNumber).Take(pageNumber).ToList();
+            return _dbContext.Users.Skip((number - 1) * pageNumber).Take(pageNumber);
         }
 
     }

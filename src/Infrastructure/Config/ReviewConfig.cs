@@ -1,12 +1,7 @@
-﻿using Domain;
-using Domain.NormalDomain;
+﻿using Domain.NormalDomain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Infrastructure
 {
@@ -21,7 +16,7 @@ namespace Infrastructure
                 .IsRequired()
                 .ValueGeneratedOnAdd();
 
-            builder.Property(e=>e.UpdatedDateTime)
+            builder.Property(e => e.UpdatedDateTime)
                 .IsRequired()
                 .ValueGeneratedOnAddOrUpdate();
 

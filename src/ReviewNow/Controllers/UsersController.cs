@@ -3,7 +3,7 @@ using AutoMapper;
 using Domain;
 using Domain.NormalDomain;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using ReviewNow.ExportDtoClases;
 using System;
 using System.Threading.Tasks;
@@ -14,13 +14,11 @@ namespace ReviewNow.Controllers
     [Route("[controller]")]
     public class UsersController : ControllerBase
     {
-        private readonly ILogger<UsersController> _logger;
         private readonly IUsersRepository _userRepository;
         private readonly IMapper _mapper;
 
-        public UsersController(ILogger<UsersController> logger, IUsersRepository userRepository, IMapper mapper)
+        public UsersController(IUsersRepository userRepository, IMapper mapper)
         {
-            _logger = logger;
             _userRepository = userRepository;
             _mapper = mapper;
         }
@@ -35,9 +33,9 @@ namespace ReviewNow.Controllers
         public async Task<IActionResult> CreateAsync([FromBody] UserDto userDto)
         {
             User userToAdd = _mapper.Map<User>(userDto);
-            User user=await _userRepository.AddAsync(userToAdd);
-            UserExpDto userExpDto = _mapper.Map<UserExpDto>(user);
-            return Created("~",userExpDto);
+            EntityEntry<User> user = await _userRepository.AddAsync(userToAdd);
+            UserExportDto userExpDto = _mapper.Map<UserExportDto>(user);
+            return Created("~", userExpDto);
         }
 
         [HttpDelete("{userId}")]

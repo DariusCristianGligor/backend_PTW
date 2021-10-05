@@ -1,18 +1,14 @@
 ﻿using Application;
-using Domain;
 using Domain.NormalDomain;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Infrastructure
 {
     public class CountryRepository : ICountryRepository
     {
-        
+
         private readonly ReviewNowContext _dbContext;
 
         public CountryRepository(ReviewNowContext dbContext)
@@ -20,33 +16,32 @@ namespace Infrastructure
 
             _dbContext = dbContext;
         }
-        public ICollection<Country> GetAll()
+        public IQueryable<Country> GetAll()
         {
-           
-          return _dbContext.Countries.ToList();
+
+            return _dbContext.Countries;
         }
         public async void AddCountry(Country country)
         {
-           await _dbContext.Countries.AddAsync(country);
+            await _dbContext.Countries.AddAsync(country);
             await _dbContext.SaveChangesAsync();
         }
 
-        public ICollection<Country> GetAllCountriesWithCities()
+        public IQueryable<Country> GetAllCountriesWithCities()
         {
-            List<Country> countries = _dbContext.Countries
-                .Include(c => c.Cities)
-                .ToList();
-            return countries;
+            return _dbContext.Countries
+                .Include(c => c.Cities);
+
             //eager loading
         }
 
-        public ICollection<Country> GetAllCountries()
+        public IQueryable<Country> GetAllCountries()
         {
-            return _dbContext.Countries.ToList();
+            return _dbContext.Countries;
         }
-        public ICollection<Country> GetAll(int page, int pageSize)
+        public IQueryable<Country> GetAll(int page, int pageSize)
         {
-            return _dbContext.Countries.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            return _dbContext.Countries.Skip((page - 1) * pageSize).Take(pageSize);
         }
     }
 }

@@ -1,11 +1,8 @@
 ﻿using Application;
-using AutoMapper;
-using Domain;
 using Domain.NormalDomain;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Infrastructure
@@ -13,36 +10,33 @@ namespace Infrastructure
     public class CategoryRepository : ICategoryRepository
     {
 
-         private readonly ReviewNowContext _dbContext;
-        private readonly IMapper _mapper;
+        private readonly ReviewNowContext _dbContext;
 
-        public CategoryRepository(ReviewNowContext dbContext,IMapper mapper)
+        public CategoryRepository(ReviewNowContext dbContext)
         {
             _dbContext = dbContext;
-            _mapper = mapper;
         }
-        public ICollection<Category> GetAll() => _dbContext.Categories.ToList();
-        public ICollection<Category> GetAll(int page,int pageSize) => _dbContext.Categories.Skip((page - 1) * pageSize).Take(pageSize).ToList();
-       
+        public IQueryable<Category> GetAll() => _dbContext.Categories;
+        public IQueryable<Category> GetAll(int page, int pageSize) => _dbContext.Categories.Skip((page - 1) * pageSize).Take(pageSize);
+
         public void Delete(Guid categoryId)
         {
             _dbContext.Categories.RemoveRange(_dbContext.Categories.Where(x => x.Id == categoryId));
-           _dbContext.SaveChanges();
+            _dbContext.SaveChanges();
         }
 
         public bool Find(Guid categoryId)
         {
-            List<Category> list = _dbContext.Categories.Where(x => x.Id == categoryId).ToList();
-            return (!(list.Count == 0));
+
+            return (!(_dbContext.Categories.Find(categoryId) == null));
         }
 
 
-        public async Task<Category> CreateAsync(Category category)
+        public async Task<EntityEntry<Category>> CreateAsync(Category category)
         {
-            //Category category = _mapper.Map<Category>(categoryDto);
-           await _dbContext.Categories.AddAsync(category);
+            EntityEntry<Category> categoryFromDb = await _dbContext.Categories.AddAsync(category);
             await _dbContext.SaveChangesAsync();
-            return category;
+            return categoryFromDb;
         }
     }
 }

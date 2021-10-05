@@ -4,27 +4,23 @@ using Domain;
 using Domain.NormalDomain;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using ReviewNow.ExportDtoClases;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ReviewNow.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ReviewsController: ControllerBase
+    public class ReviewsController : ControllerBase
     {
-        private readonly ILogger<ReviewsController> logger;
         private readonly IReviewRepository _reviewRepository;
         private readonly IHostingEnvironment _hostingEnv;
         private readonly IMapper _mapper;
-        public ReviewsController(ILogger<ReviewsController> logger,IReviewRepository reviewRepository, IHostingEnvironment hostingEnv,IMapper mapper)
+        public ReviewsController(IReviewRepository reviewRepository, IHostingEnvironment hostingEnv, IMapper mapper)
         {
-            this.logger = logger;
             _reviewRepository = reviewRepository;
             _hostingEnv = hostingEnv;
             _mapper = mapper;
@@ -41,7 +37,7 @@ namespace ReviewNow.Controllers
         [HttpPost]
         public async Task<ActionResult> Post([FromForm] ReviewDto reviewDto)
         {
-            Review review;
+            EntityEntry<Review> review;
             if (reviewDto.Image != null)
             {
                 var a = _hostingEnv.WebRootPath;
@@ -54,12 +50,12 @@ namespace ReviewNow.Controllers
                 }
                 Review review1 = _mapper.Map<Review>(reviewDto);
                 review = await _reviewRepository.AddAsync(review1);
-                ReviewExpDto reviewExpDto = _mapper.Map<ReviewExpDto>(review);
+                ReviewExportDto reviewExpDto = _mapper.Map<ReviewExportDto>(review);
                 return Created("~", reviewExpDto);
             }
-           
+
             return BadRequest();
-   
+
         }
 
         [HttpDelete("{reviewIds}")]

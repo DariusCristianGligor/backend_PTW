@@ -1,62 +1,56 @@
 ﻿using Application;
-using Domain;
 using Domain.NormalDomain;
-using Infrastructure.Repository;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Infrastructure
 {
     public class ReviewRepository : IReviewRepository
     {
-       
+
 
         private readonly ReviewNowContext _dbContext;
-
-        public ReviewRepository(ReviewNowContext dbContext)
+        IRecomandationService _recomandationService;
+        public ReviewRepository(ReviewNowContext dbContext, IRecomandationService recomandationService)
         {
 
             _dbContext = dbContext;
+            _recomandationService = recomandationService;
         }
-  
-        public async Task<Review> AddAsync(Review review)
+
+        public async Task<EntityEntry<Review>> AddAsync(Review review)
         {
-            
-            await _dbContext.Reviews.AddAsync(review);
-            var recomandationService = new RecomandationServiceRepository(_dbContext);
-            recomandationService.RecalculateRating(review);
+
+            EntityEntry<Review> reviewFromDb = await _dbContext.Reviews.AddAsync(review);
+            Place place = _dbContext.Places.Find(review.PlaceId);
+            _recomandationService.RecalculateRating(place, review.Stars);
             await _dbContext.SaveChangesAsync();
-            return review;
+            return reviewFromDb;
         }
 
         public void Delete(Guid reviewId)
         {
-            //return db.Reviews.Where(p =>p.Place.Id == placeId).ToList();
-            //return db.Reviews.Where(p =>p.Place == place).ToList();
-            //return _dbcontext.Reviews.Where(p =>p.Place == place).ToList();
-            //_dbContext.Reviews.Remove();
-            _dbContext.Reviews.RemoveRange(_dbContext.Reviews.Where(x => x.Id == reviewId).ToList());
-            var recomandationService = new RecomandationServiceRepository(_dbContext);
-            recomandationService.RecalculateRatingDeleted(reviewId);
+            _dbContext.Reviews.RemoveRange(_dbContext.Reviews.Where(x => x.Id == reviewId));
+            Review review = _dbContext.Reviews.Find(reviewId);
+            Place place = _dbContext.Places.Find(review.PlaceId);
+            _recomandationService.RecalculateRatingDeleted(place, review.Stars);
             _dbContext.SaveChanges();
         }
 
         public bool Find(Guid reviewId)
         {
-            List<Review> list = _dbContext.Reviews.Where(x => x.Id == reviewId).ToList();
-            return (!(list.Count == 0));
+            return (!(_dbContext.Reviews.Find(reviewId) == null));
         }
 
-        public ICollection<Review> GetAllReviewByPlaceId(Guid placeId)
+        public IQueryable<Review> GetAllReviewByPlaceId(Guid placeId)
         {
-            return _dbContext.Reviews.Where(x => x.PlaceId == placeId).ToList();
+            return _dbContext.Reviews.Where(x => x.PlaceId == placeId);
         }
-        public ICollection<Review> GetAllReviewByPlaceId(Guid placeId,int page,int pageSize)
+        public IQueryable<Review> GetAllReviewByPlaceId(Guid placeId, int page, int pageSize)
         {
-            return _dbContext.Reviews.Where(x => x.PlaceId == placeId).Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            return _dbContext.Reviews.Where(x => x.PlaceId == placeId).Skip((page - 1) * pageSize).Take(pageSize);
         }
 
     }

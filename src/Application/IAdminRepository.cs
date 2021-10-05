@@ -1,18 +1,16 @@
-﻿using Domain;
-using Domain.NormalDomain;
+﻿using Domain.NormalDomain;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Application
 {
     public interface IAdminRepository
     {
-        ICollection<Admin> GetAll();
+        IQueryable<Admin> GetAll();
         void Delete(Guid adminId);
-        Task<Admin> AddAsync(Admin admin);
+        Task<EntityEntry<Admin>> AddAsync(Admin admin);
         bool Find(Guid adminId);
     }
 }
