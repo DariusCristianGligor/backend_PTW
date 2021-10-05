@@ -22,7 +22,9 @@ namespace Application
         void Delete(Guid placeId);
 
         Task<EntityEntry<Place>> AddAsync(Place place);
+        public Place FindByPlaceId(Guid placeId);
 
         bool Find(Guid placeId);
+        void UpdatePlace(Place place);
     }
 }

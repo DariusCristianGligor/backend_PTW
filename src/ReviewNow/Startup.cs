@@ -1,4 +1,5 @@
 using Application;
+using Application.Services;
 using AutoMapper;
 using Infrastructure;
 using Microsoft.AspNetCore.Builder;
@@ -47,6 +48,7 @@ namespace ReviewNow
             services.AddScoped<ICountryRepository, CountryRepository>();
             services.AddScoped<IPlaceRepository, PlaceRepository>();
             services.AddScoped<IReviewRepository, ReviewRepository>();
+            services.AddScoped<IRecomandationService, RecomandationServices>();
             services.AddControllers().AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );

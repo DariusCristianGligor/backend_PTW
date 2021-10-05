@@ -1,10 +1,12 @@
 ﻿using Domain.NormalDomain;
+using System;
 
 namespace Application
 {
     public interface IRecomandationService
     {
-        void RecalculateRating(Place place, int stars);
-        void RecalculateRatingDeleted(Place place, int stars);
+        void RecalculateRating(Guid placeId, int stars);
+
+        void RecalculateRatingDeleted(Guid placeId, int stars);
     }
 }

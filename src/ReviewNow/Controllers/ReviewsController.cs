@@ -19,11 +19,14 @@ namespace ReviewNow.Controllers
         private readonly IReviewRepository _reviewRepository;
         private readonly IHostingEnvironment _hostingEnv;
         private readonly IMapper _mapper;
-        public ReviewsController(IReviewRepository reviewRepository, IHostingEnvironment hostingEnv, IMapper mapper)
+        private readonly IRecomandationService _recomandationService;
+
+        public ReviewsController(IReviewRepository reviewRepository, IHostingEnvironment hostingEnv, IMapper mapper, IRecomandationService recomandationService)
         {
             _reviewRepository = reviewRepository;
             _hostingEnv = hostingEnv;
             _mapper = mapper;
+            _recomandationService = recomandationService;
         }
 
         [HttpGet]
@@ -51,18 +54,21 @@ namespace ReviewNow.Controllers
                 Review review1 = _mapper.Map<Review>(reviewDto);
                 review = await _reviewRepository.AddAsync(review1);
                 ReviewExportDto reviewExpDto = _mapper.Map<ReviewExportDto>(review);
+                _recomandationService.RecalculateRating(review1.PlaceId, reviewExpDto.Stars);
                 return Created("~", reviewExpDto);
             }
-
             return BadRequest();
-
         }
 
         [HttpDelete("{reviewIds}")]
         public IActionResult Delete(Guid reviewId)
         {
-            if (_reviewRepository.Find(reviewId) == false) return NotFound();
-            _reviewRepository.Delete(reviewId);
+            Review review = _reviewRepository.Find(reviewId);
+            if (review == null) return NotFound();
+            {
+                _recomandationService.RecalculateRatingDeleted(review.PlaceId, review.Stars);
+                _reviewRepository.Delete(reviewId);
+            }
             return NoContent();
         }
 

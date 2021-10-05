@@ -4,10 +4,8 @@ using Domain;
 using Domain.NormalDomain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.Extensions.Logging;
 using ReviewNow.ExportDtoClases;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ReviewNow.Controllers

@@ -24,8 +24,6 @@ namespace Infrastructure
         {
 
             EntityEntry<Review> reviewFromDb = await _dbContext.Reviews.AddAsync(review);
-            Place place = _dbContext.Places.Find(review.PlaceId);
-            _recomandationService.RecalculateRating(place, review.Stars);
             await _dbContext.SaveChangesAsync();
             return reviewFromDb;
         }
@@ -33,15 +31,12 @@ namespace Infrastructure
         public void Delete(Guid reviewId)
         {
             _dbContext.Reviews.RemoveRange(_dbContext.Reviews.Where(x => x.Id == reviewId));
-            Review review = _dbContext.Reviews.Find(reviewId);
-            Place place = _dbContext.Places.Find(review.PlaceId);
-            _recomandationService.RecalculateRatingDeleted(place, review.Stars);
             _dbContext.SaveChanges();
         }
 
-        public bool Find(Guid reviewId)
+        public Review Find(Guid reviewId)
         {
-            return (!(_dbContext.Reviews.Find(reviewId) == null));
+            return _dbContext.Reviews.Find(reviewId);
         }
 
         public IQueryable<Review> GetAllReviewByPlaceId(Guid placeId)

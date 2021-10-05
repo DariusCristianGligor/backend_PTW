@@ -11,6 +11,6 @@ namespace Application
         Task<EntityEntry<Review>> AddAsync(Review review);
         void Delete(Guid idReview);
         IQueryable<Review> GetAllReviewByPlaceId(Guid placeId);
-        bool Find(Guid reviewId);
+        Review Find(Guid reviewId);
     }
 }

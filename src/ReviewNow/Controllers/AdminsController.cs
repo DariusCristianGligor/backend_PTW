@@ -4,7 +4,6 @@ using Domain;
 using Domain.NormalDomain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.Extensions.Logging;
 using ReviewNow.ExportDtoClases;
 using System;
 using System.Threading.Tasks;
@@ -46,7 +45,8 @@ namespace ReviewNow.Controllers
         [HttpDelete("{adminId}")]
         public IActionResult Delete(Guid adminId)
         {
-            if (_adminRepository.Find(adminId) == false) return NotFound();
+            if (_adminRepository.Find(adminId) == false)
+                return NotFound();
             _adminRepository.Delete(adminId);
             return NoContent(); ;
             //204

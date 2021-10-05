@@ -88,5 +88,14 @@ namespace Infrastructure
         {
             return (!(_dbContext.Places.Find(placeId) == null));
         }
+        public Place FindByPlaceId(Guid placeId)
+        {
+            return _dbContext.Places.Find(placeId);
+        }
+        public void UpdatePlace(Place place)
+        {
+            _dbContext.Update(place);
+            _dbContext.SaveChanges();
+        }
     }
 }
