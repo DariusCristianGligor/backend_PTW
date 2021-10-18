@@ -1,4 +1,5 @@
-﻿using Domain.NormalDomain;
+﻿using Domain;
+using Domain.NormalDomain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -11,6 +12,7 @@ namespace Infrastructure
         public void Configure(EntityTypeBuilder<Review> builder)
         {
             builder.Property(e => e.Id).ValueGeneratedOnAdd();
+            //builder.Property(e => e.UserId).ValueGeneratedOnAdd();
 
             builder.Property(e => e.AddedDateTime)
                 .IsRequired()
@@ -26,9 +28,11 @@ namespace Infrastructure
                 .WithMany(y => y.Reviews)
                 .HasForeignKey(y => y.PlaceId);
 
-            builder.HasOne<User>(x => x.User)
-                .WithMany(y => y.Reviews)
-                .HasForeignKey(y => y.UserId);
+            //builder.HasOne<User>(x => x.User)
+            //    .WithMany(y => y.Reviews)
+            //    .HasForeignKey(y => y.UserId);
+            builder.HasMany<WrapperStringPathReview>(x => x.ImagePaths)
+              .WithOne(k => k.Review).HasForeignKey(z => z.ReviewId);
         }
 
 

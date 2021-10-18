@@ -2,6 +2,7 @@ using Application;
 using Application.Services;
 using AutoMapper;
 using Infrastructure;
+using Infrastructure.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
@@ -40,10 +41,10 @@ namespace ReviewNow
             services.AddDbContext<ReviewNowContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-
-
             });
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IWrapperPlaceRepository, WrapperPlaceRepository>();
+            services.AddScoped<IWrapperStringPathReviewRepository, WraperStringPAthReviewRepository>();
             services.AddScoped<ICityRepository, CityRepository>();
             services.AddScoped<ICountryRepository, CountryRepository>();
             services.AddScoped<IPlaceRepository, PlaceRepository>();

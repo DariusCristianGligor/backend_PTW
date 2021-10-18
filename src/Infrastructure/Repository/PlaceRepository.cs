@@ -27,6 +27,7 @@ namespace Infrastructure
         {
             return _dbContext.Places.Where(x => x.CityId == city).Skip((page - 1) * pageSize).Take(pageSize);
         }
+
         public IQueryable<Place> GetPlaceOrderedByRating()
         {
             return _dbContext.Places.OrderByDescending(x => x.Rating);
@@ -38,7 +39,7 @@ namespace Infrastructure
         public IQueryable<Place> GetAllByCityIdAndCategoryId(Guid cityId, ICollection<Guid> categoriesId)
         {
             IQueryable<Place> places = GetAllByCityId(cityId);
-            return places.Where(x => x.Categories.Any(x => categoriesId.Contains(x.Id)));
+            return places.OrderBy(x=>x.Name).Where(x => x.Categories.Any(x => categoriesId.Contains(x.Id)));
         }
         public IQueryable<Place> GetAllByCityIdAndCategoryId(Guid cityId, ICollection<Guid> categoriesId, int page, int pageSize)
         {
@@ -53,15 +54,20 @@ namespace Infrastructure
         {
             return _dbContext.Places.Where(x => x.Categories.Any(x => categoriesId.Contains(x.Id))).Skip((page - 1) * pageSize).Take(pageSize);
         }
-        public IQueryable<Place> GetAllByCategoryIdAndCountryId(ICollection<Guid> categoriesId, Guid CountryId, int page, int pageSize)
+        public IQueryable<Place> GetAllByCategoryIdAndCityId(ICollection<Guid> categoriesId, Guid cityId, int page, int pageSize)
         {
-            IQueryable<Place> places = _dbContext.Places.Where(x => x.City.CountryId == CountryId);
-            return places.Where(x => x.Categories.Any(x => categoriesId.Contains(x.Id))).Skip((page - 1) * pageSize).Take(pageSize);
+            IQueryable<Place> places = _dbContext.Places.Where(x => x.CityId== cityId);
+            return places.OrderBy(x=>x.Name).Where(x => x.Categories.Any(x => categoriesId.Contains(x.Id))).Skip((page - 1) * pageSize).Take(pageSize);
         }
         public IQueryable<Place> GetAllByCategoryIdAndCountryId(ICollection<Guid> categoriesId, Guid CountryId)
         {
             IQueryable<Place> places = places = _dbContext.Places.Where(x => x.City.CountryId == CountryId);
             return places.Where(x => x.Categories.Any(x => categoriesId.Contains(x.Id)));
+        }
+        public int NumberOfPlaceWithIdAndCategories(ICollection<Guid> categoriesId, Guid placeId)
+        {
+            IQueryable<Place> places = places = _dbContext.Places.Where(x => x.CityId == placeId);
+            return places.Where(x => x.Categories.Any(x => categoriesId.Contains(x.Id))).Count();
         }
         public IQueryable<Place> GetAllOrderedByRating()
         {
@@ -79,6 +85,11 @@ namespace Infrastructure
 
         public async Task<EntityEntry<Place>> AddAsync(Place place)
         {
+            foreach (Category cat in place.Categories)
+            {   
+                cat.Places.Add(place);
+                _dbContext.Categories.Update(cat);
+            }
             EntityEntry<Place> placeFromDb = await _dbContext.Places.AddAsync(place);
             await _dbContext.SaveChangesAsync();
             return placeFromDb;
@@ -88,6 +99,11 @@ namespace Infrastructure
         {
             return (!(_dbContext.Places.Find(placeId) == null));
         }
+
+        public Place GetPlace(Guid placeId)
+        {
+            return _dbContext.Places.Find(placeId);
+        }
         public Place FindByPlaceId(Guid placeId)
         {
             return _dbContext.Places.Find(placeId);
@@ -96,6 +112,12 @@ namespace Infrastructure
         {
             _dbContext.Update(place);
             _dbContext.SaveChanges();
+        }
+
+        public int GetNumberOfPlace()
+        {
+            
+            return _dbContext.Places.Count();
         }
     }
 }

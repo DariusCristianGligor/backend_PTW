@@ -21,11 +21,7 @@ namespace ReviewNow.Controllers
             _adminRepository = adminRepository;
             _mapper = mapper;
         }
-        public AdminsController(IAdminRepository adminRepository)
-        {
-            _adminRepository = adminRepository;
-        }
-
+      
         [HttpGet]
         public IActionResult Index()
         {

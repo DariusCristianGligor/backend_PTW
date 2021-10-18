@@ -1,5 +1,7 @@
 ﻿using CountryData.Standard;
+using Domain;
 using Domain.NormalDomain;
+using Infrastructure.Config;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -22,12 +24,18 @@ namespace Infrastructure
         public DbSet<Review> Reviews { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Admin> Admins { get; set; }
+        public DbSet<WrapperStringPath> WrapperStringPaths { get; set; }
+        public DbSet<WrapperStringPathReview> WrapperStringPathsReview { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new CountryConfig());
+            modelBuilder.ApplyConfiguration(new UserConfig());
+            modelBuilder.ApplyConfiguration(new AdminConfig());
             modelBuilder.ApplyConfiguration(new CityConfig());
             modelBuilder.ApplyConfiguration(new PlaceConfig());
             modelBuilder.ApplyConfiguration(new ReviewConfig());
+            modelBuilder.ApplyConfiguration(new WrapperStringPathConfig());
+            modelBuilder.ApplyConfiguration(new WrapperStringPathReviewConfig());
             var helper = new CountryHelper();
             var data = helper.GetCountryData();
 

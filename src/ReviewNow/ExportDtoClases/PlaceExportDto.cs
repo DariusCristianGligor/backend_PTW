@@ -26,6 +26,7 @@ namespace ReviewNow.ExportDtoClases
         public City City { set; get; }
 
         public ICollection<Review> Reviews { set; get; }
+        public ICollection<string> ImagePaths { set; get; }
 
         public ICollection<Category> Categories { set; get; }
         public DateTime AddedDateTime { get; set; }

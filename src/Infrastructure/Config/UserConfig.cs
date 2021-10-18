@@ -9,9 +9,9 @@ namespace Infrastructure.Config
         public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.Property(e => e.Id).ValueGeneratedOnAdd();
-            builder.HasMany<Review>(e => e.Reviews)
-                 .WithOne(c => c.User)
-                 .HasForeignKey(c => c.UserId);
+            //builder.HasMany<Review>(e => e.Reviews)
+            //     .WithOne(c => c.User)
+            //     .HasForeignKey(c => c.UserId);
             builder.Property(e => e.AddedDateTime)
                .IsRequired()
                .ValueGeneratedOnAdd();

@@ -24,9 +24,9 @@ namespace ReviewNow.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index([FromQuery]int page,[FromQuery]int pageSize)
         {
-            return Ok(_userRepository.GetAll());
+            return Ok(_userRepository.GetAll(page,pageSize));
         }
 
         [HttpPost]

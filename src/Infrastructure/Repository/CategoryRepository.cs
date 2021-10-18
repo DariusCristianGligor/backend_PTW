@@ -17,7 +17,11 @@ namespace Infrastructure
             _dbContext = dbContext;
         }
         public IQueryable<Category> GetAll() => _dbContext.Categories;
-        public IQueryable<Category> GetAll(int page, int pageSize) => _dbContext.Categories.Skip((page - 1) * pageSize).Take(pageSize);
+        public IQueryable<Category> GetAll(int page, int pageSize) => _dbContext.Categories.OrderBy(x=>x.Name).Skip((page - 1) * pageSize).Take(pageSize);
+        public int GetNumberOfCategory()
+        {
+            return _dbContext.Categories.Count();
+        }
 
         public void Delete(Guid categoryId)
         {
@@ -25,10 +29,12 @@ namespace Infrastructure
             _dbContext.SaveChanges();
         }
 
-        public bool Find(Guid categoryId)
+        public bool Find(Guid Id)
         {
 
-            return (!(_dbContext.Categories.Find(categoryId) == null));
+            if (_dbContext.Categories.Find(Id) == null)
+                return false;
+            return true;
         }
 
 
@@ -37,6 +43,11 @@ namespace Infrastructure
             EntityEntry<Category> categoryFromDb = await _dbContext.Categories.AddAsync(category);
             await _dbContext.SaveChangesAsync();
             return categoryFromDb;
+        }
+
+        public IQueryable<Category> GetAllByPlaceID(Guid placeId)
+        {
+            return _dbContext.Categories.Where(x => x.Places.Any(x=> x.Id == placeId));
         }
     }
 }

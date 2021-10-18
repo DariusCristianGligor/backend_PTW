@@ -14,7 +14,8 @@ namespace ReviewNow.ExportDtoClases
         public Price CostOfPlace { get; set; }
         public Guid PlaceId { get; set; }
         public Place Place { get; set; }
-        public string ImagePath { get; set; }
+        public string Description { get; set; }
+        public ICollection<string> ImagePaths { get; set; }
         public User User { get; set; }
         public Guid UserId { get; set; }
         public DateTime AddedDateTime { get; set; }

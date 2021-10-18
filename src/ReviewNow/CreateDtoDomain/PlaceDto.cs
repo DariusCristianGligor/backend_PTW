@@ -1,4 +1,6 @@
 ﻿using Domain.NormalDomain;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -14,13 +16,9 @@ namespace Domain
         [Required]
         [StringLength(100, ErrorMessage = "Address length can't be more than 100 character.")]
         public string Address { set; get; }
-        public float Rating { set; get; }
-        [Range(0, 5, ErrorMessage = "Rating must be between zero and five")]
-        public float AvgStars { set; get; }
-        public int NumberOfReview { set; get; }
+        public string Description { get; set; }
         public Guid CityId { set; get; }
-        public City City { set; get; }
-        public ICollection<Review> Reviews { set; get; }
-        public ICollection<Category> Categories { set; get; }
+        public List<IFormFile> Images { get; set; }
+        public IFormFile Categories { set; get; }
     }
 }

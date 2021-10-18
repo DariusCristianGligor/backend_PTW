@@ -19,7 +19,7 @@ namespace Infrastructure
         }
         public IQueryable<City> GetCitiesByCountryId(Guid countryId)
         {
-            return _dbContext.Cities.Where(x => x.CountryId == countryId);
+            return _dbContext.Cities.OrderBy(x=>x.Name).Where(x => x.CountryId == countryId);
         }
         public IQueryable<City> GetCities()
         {

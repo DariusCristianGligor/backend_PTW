@@ -45,8 +45,12 @@ namespace Infrastructure
         }
         public IQueryable<Review> GetAllReviewByPlaceId(Guid placeId, int page, int pageSize)
         {
-            return _dbContext.Reviews.Where(x => x.PlaceId == placeId).Skip((page - 1) * pageSize).Take(pageSize);
+            return _dbContext.Reviews.OrderBy(x=>x.AddedDateTime).Where(x => x.PlaceId == placeId).Skip((page - 1) * pageSize).Take(pageSize);
         }
 
+        public int GetNumberOfReview(Guid placeId)
+        {
+            return _dbContext.Reviews.Where(x=>x.PlaceId==placeId).Count();
+        }
     }
 }

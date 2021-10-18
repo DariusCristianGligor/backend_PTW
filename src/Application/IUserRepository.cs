@@ -11,7 +11,11 @@ namespace Application
         IQueryable<User> GetAll();
 
         void Delete(Guid userId);
+        
         Task<EntityEntry<User>> AddAsync(User user);
+
+        IQueryable<User> GetAll(int number, int pageNumber);
+
         bool Find(Guid userId);
     }
 }
