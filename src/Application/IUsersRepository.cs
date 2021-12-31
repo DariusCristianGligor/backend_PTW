@@ -8,14 +8,14 @@ namespace Application
 {
     public interface IUsersRepository
     {
-        IQueryable<User> GetAll();
-
         void Delete(Guid userId);
-        
-        Task<EntityEntry<User>> AddAsync(User user);
 
-        IQueryable<User> GetAll(int number, int pageNumber);
+        Task<EntityEntry<User>> CreateAsync(User user);
 
         bool Find(Guid userId);
+        User GetByMail(string mail);
+
+        User GetById(Guid id);
+
     }
 }

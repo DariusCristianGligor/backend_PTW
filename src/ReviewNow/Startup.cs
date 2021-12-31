@@ -68,6 +68,8 @@ namespace ReviewNow
             services.AddScoped<IPlaceRepository, PlaceRepository>();
             services.AddScoped<IReviewRepository, ReviewRepository>();
             services.AddScoped<IRecomandationService, RecomandationServices>();
+            services.AddScoped<IUsersRepository, UsersRepository> ();
+            services.AddScoped<IJwtService, JwtService>();
             services.AddControllers().AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
@@ -79,7 +81,7 @@ namespace ReviewNow
             {
                 configuration.RootPath = "ClientApp/build";
             });
-            services.AddCors(options => options.AddDefaultPolicy(builder => builder.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod()));
+            services.AddCors(options => options.AddDefaultPolicy(builder => builder.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod().AllowCredentials()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

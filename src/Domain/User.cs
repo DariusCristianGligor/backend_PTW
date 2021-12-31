@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Domain.NormalDomain
@@ -19,6 +20,10 @@ namespace Domain.NormalDomain
         [Required]
         [Phone]
         public string PhoneNumber { set; get; }
+
+        [JsonIgnore]
+        public string Password { set; get; }
+
         public ICollection<Review> Reviews { set; get; }
         public DateTime AddedDateTime { get; set; }
     }

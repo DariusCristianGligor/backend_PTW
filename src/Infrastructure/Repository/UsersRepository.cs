@@ -8,21 +8,19 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repository
 {
-    class UserRepository : IUsersRepository
+    public class UsersRepository : IUsersRepository
     {
 
         private readonly ReviewNowContext _dbContext;
 
-        public UserRepository(ReviewNowContext dbContext)
+        public UsersRepository(ReviewNowContext dbContext)
         {
             _dbContext = dbContext;
 
         }
-
-        public async Task<EntityEntry<User>> AddAsync(User user)
+        public async Task<EntityEntry<User>> CreateAsync(User user)
         {
-
-            EntityEntry<User> userFromDb = await _dbContext.AddAsync(user);
+            EntityEntry<User> userFromDb = await _dbContext.Users.AddAsync(user);
             await _dbContext.SaveChangesAsync();
             return userFromDb;
         }
@@ -47,5 +45,14 @@ namespace Infrastructure.Repository
             return _dbContext.Users.Skip((number - 1) * pageNumber).Take(pageNumber);
         }
 
+        public User GetById(Guid id)
+        {
+            return _dbContext.Users.FirstOrDefault(user => user.Id == id);
+        }
+
+        public User GetByMail(string mail)
+        {
+            return _dbContext.Users.FirstOrDefault(User => User.Mail == mail);
+        }
     }
 }
